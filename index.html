@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, initial-scale=1" />
+    <title>הנדסה • סימולציה 1080P</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        background: #181818;
+      }
+      .container-1080p {
+        width: 1920px;
+        height: 1080px;
+        margin: 0 auto;
+        background: #22262a;
+        border: 4px solid #f6d365;
+        border-radius: 24px;
+        box-shadow: 0 0 40px #000a, 0 0 0 8px #fbc2eb33;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      @media (max-width: 1920px) {
+        .container-1080p { width: 100vw; height: 100vh; border-radius: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-1080p">
+      <header class="hero">
+        <div class="hero__visual">
+          <section class="panel" style="margin-bottom: 0;">
+            <h2>גרפים אינטראקטיביים</h2>
+            <div class="panel-grid">
+              <div class="chart-card">
+                <canvas id="sineChart" width="400" height="180"></canvas>
+                <p>תגובה דינמית של קורה בעומס מחזורי</p>
+                <div class="controls">
+                  <label>תדירות: <input id="sineFreq" type="range" min="0.2" max="3" step="0.01" value="1" style="width:100px"></label>
+                  <label>משרעת: <input id="sineAmp" type="range" min="0.2" max="2" step="0.01" value="1" style="width:100px"></label>
+                  <button id="sineReset">איפוס</button>
+                </div>
+              </div>
+              <div class="chart-card">
+                <canvas id="stressChart" width="400" height="180"></canvas>
+                <p>מאמץ שקול לאורך אלמנט</p>
+                <div class="controls">
+                  <label>היסט: <input id="stressShift" type="range" min="0" max="3.14" step="0.01" value="0" style="width:100px"></label>
+                  <button id="stressReset">איפוס</button>
+                </div>
+              </div>
+              <div class="chart-card">
+                <canvas id="energyChart" width="400" height="180"></canvas>
+                <p>אנרגיה מצטברת בתנודה מרוסנת</p>
+                <div class="controls">
+                  <label>דעיכה: <input id="energyDecay" type="range" min="5" max="30" step="0.1" value="10" style="width:100px"></label>
+                  <button id="energyReset">איפוס</button>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div class="glass-panel">
+            <svg viewBox="0 0 120 60" width="120" height="60" role="img" aria-label="שרטוט מכני">
+              <circle cx="60" cy="30" r="28" fill="none" stroke="#f6d365" stroke-width="4" />
+              <rect x="20" y="20" width="80" height="20" rx="8" fill="#232323" stroke="#fda085" stroke-width="2" />
+              <text x="60" y="55" fill="#fbc2eb" font-size="12" text-anchor="middle">ציר מכני</text>
+            </svg>
+          </div>
+          <div class="equation-block">
+            <div class="equation">$$\sigma = \frac{M y}{I}$$</div>
+            <div class="equation">$$\omega_n = \sqrt{\frac{k}{m}}$$</div>
+            <div class="equation">$$\delta = \frac{F L^3}{3 E I}$$</div>
+          </div>
+        </div>
+        <div class="hero__text">
+          <h1>הנדסה ויזואלית 1080P</h1>
+          <p class="lead">
+            הדגמה אינטראקטיבית של עקרונות הנדסיים: גרפים חיים, מחוונים, משוואות, ושרטוטים.
+          </p>
+          <div class="hero__actions">
+            <button class="btn primary" id="runSim">הרץ סימולציה</button>
+            <button class="btn ghost" id="freeze">הקפא</button>
+          </div>
+          <div class="metrics">
+            <div>
+              <span class="metric-label">תדר עצמי</span>
+              <span class="metric" id="freq">0.00 Hz</span>
+            </div>
+            <div>
+              <span class="metric-label">מאמץ שקול</span>
+              <span class="metric" id="stress">0.0 MPa</span>
+            </div>
+            <div>
+              <span class="metric-label">סטייה מקס'</span>
+              <span class="metric" id="deflection">0.00 mm</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="content">
+        <section class="panel">
+          <h2>מחווני שליטה</h2>
+          <div class="params">
+            <div class="param">
+              <label for="mass">מסה (kg)</label>
+              <input id="mass" type="range" min="2" max="20" step="0.5" value="8" />
+            </div>
+            <div class="param">
+              <label for="stiffness">קשיחות (kN/m)</label>
+              <input id="stiffness" type="range" min="50" max="400" step="5" value="180" />
+            </div>
+            <div class="param">
+              <label for="force">עומס (kN)</label>
+              <input id="force" type="range" min="5" max="60" step="1" value="24" />
+            </div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>תצוגת חלקים</h2>
+          <div class="parts">
+            <div class="part">
+              <span class="part__title">ציר מסובב</span>
+              <span class="part__value" id="shaft">1520 rpm</span>
+            </div>
+            <div class="part">
+              <span class="part__title">זרימת חום</span>
+              <span class="part__value" id="heat">86 °C</span>
+            </div>
+            <div class="part">
+              <span class="part__title">יחס שיכוך</span>
+              <span class="part__value" id="damping">0.03</span>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <p>הדגמה חזותית של נושאי הנדסה, גרפים, מחוונים ונוסחאות.</p>
+      </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script>
+      // Chart.js interactive graphs with controls
+      function createCharts() {
+        const sineCtx = document.getElementById('sineChart').getContext('2d');
+        const stressCtx = document.getElementById('stressChart').getContext('2d');
+        const energyCtx = document.getElementById('energyChart').getContext('2d');
+        let t = 0;
+        let sineFreq = 1, sineAmp = 1, stressShift = 0, energyDecay = 10;
+        const sineData = Array.from({length: 40}, (_, i) => i/4);
+        const stressData = Array.from({length: 40}, (_, i) => i/4);
+        const energyData = Array.from({length: 40}, (_, i) => i/4);
+        const sineChart = new Chart(sineCtx, {
+          type: 'line',
+          data: { labels: sineData, datasets: [{ label: 'תנודה', data: sineData.map(x=>Math.sin(x)), borderColor: '#ffeb3b', fill: false }] },
+          options: { animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+        const stressChart = new Chart(stressCtx, {
+          type: 'bar',
+          data: { labels: stressData, datasets: [{ label: 'מאמץ', data: stressData.map(x=>0.5+0.5*Math.abs(Math.sin(x))), backgroundColor: '#00bcd4' }] },
+          options: { animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+        const energyChart = new Chart(energyCtx, {
+          type: 'line',
+          data: { labels: energyData, datasets: [{ label: 'אנרגיה', data: energyData.map(x=>Math.exp(-x/energyDecay)*Math.cos(x)), borderColor: '#ff4081', fill: true, backgroundColor: 'rgba(255,64,129,0.15)' }] },
+          options: { animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+        // Controls
+        document.getElementById('sineFreq').addEventListener('input', e => { sineFreq = +e.target.value; });
+        document.getElementById('sineAmp').addEventListener('input', e => { sineAmp = +e.target.value; });
+        document.getElementById('sineReset').addEventListener('click', () => { sineFreq = 1; sineAmp = 1; document.getElementById('sineFreq').value = 1; document.getElementById('sineAmp').value = 1; });
+        document.getElementById('stressShift').addEventListener('input', e => { stressShift = +e.target.value; });
+        document.getElementById('stressReset').addEventListener('click', () => { stressShift = 0; document.getElementById('stressShift').value = 0; });
+        document.getElementById('energyDecay').addEventListener('input', e => { energyDecay = +e.target.value; });
+        document.getElementById('energyReset').addEventListener('click', () => { energyDecay = 10; document.getElementById('energyDecay').value = 10; });
+        function animate() {
+          t += 0.04;
+          sineChart.data.datasets[0].data = sineData.map(x=>sineAmp*Math.sin(sineFreq*x+t));
+          stressChart.data.datasets[0].data = stressData.map(x=>0.5+0.5*Math.abs(Math.sin(x+t/2+stressShift)));
+          energyChart.data.datasets[0].data = energyData.map(x=>Math.exp(-x/energyDecay)*Math.cos(x+t));
+          sineChart.update('none');
+          stressChart.update('none');
+          energyChart.update('none');
+          requestAnimationFrame(animate);
+        }
+        animate();
+      }
+      window.addEventListener('DOMContentLoaded', createCharts);
+      // SVG gear animation
+      function animateGear() {
+        const svg = document.querySelector('.glass-panel svg');
+        if (!svg) return;
+        let angle = 0;
+        function spin() {
+          angle += 1.2;
+          svg.style.transform = `rotate(${angle}deg)`;
+          svg.style.transformOrigin = '60px 30px';
+          requestAnimationFrame(spin);
+        }
+        spin();
+      }
+      window.addEventListener('DOMContentLoaded', animateGear);
+    </script>
+  </body>
+</html>

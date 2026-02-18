@@ -1,0 +1,135 @@
+:root {
+  --main-bg: #181818;
+  --panel-bg: #23272e;
+  --primary: #ffeb3b;
+  --secondary: #00bcd4;
+  --accent: #ff4081;
+  --text: #fff;
+  --text-strong: #23272e;
+  --border: #ffeb3b;
+  --shadow: 0 0 40px #000a, 0 0 0 8px #00bcd4;
+  --radius: 24px;
+  --font-display: "Assistant", Arial, sans-serif;
+}
+body {
+  background: var(--main-bg);
+  font-size: 1.35rem;
+  color: var(--text);
+  font-family: var(--font-display);
+}
+.container-1080p {
+  width: 1920px;
+  height: 1080px;
+  margin: 0 auto;
+  background: var(--panel-bg);
+  border: 4px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+@media (max-width: 1920px) {
+  .container-1080p { width: 100vw; height: 100vh; border-radius: 0; }
+}
+.hero__text h1 {
+  font-size: 3.2rem;
+  color: var(--primary);
+  margin-bottom: 18px;
+  font-weight: 900;
+}
+.lead {
+  color: var(--text);
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.panel h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: var(--secondary);
+  font-weight: 700;
+}
+.chart-card p {
+  font-size: 1.2rem;
+  color: var(--text);
+  font-weight: 600;
+}
+.metric-label {
+  font-size: 1.2rem;
+  color: var(--secondary);
+  margin-bottom: 4px;
+}
+.metric {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.btn {
+  border: 2px solid var(--accent);
+  padding: 14px 32px;
+  border-radius: 999px;
+  background: var(--panel-bg);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: background 0.2s, color 0.2s;
+}
+.btn.primary {
+  background: linear-gradient(120deg, var(--primary), var(--secondary));
+  color: var(--text-strong);
+  border: none;
+  box-shadow: 0 10px 25px var(--secondary);
+}
+.btn.ghost:hover,
+.btn.primary:hover {
+  background: var(--accent);
+  color: var(--text);
+}
+.controls label {
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-left: 12px;
+  margin-right: 8px;
+}
+.controls input[type="range"] {
+  accent-color: var(--secondary);
+  vertical-align: middle;
+}
+.controls button {
+  font-size: 1.1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 22px;
+  margin-right: 8px;
+  margin-top: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.controls button:hover {
+  background: var(--secondary);
+  color: var(--text-strong);
+}
+.panel, .glass-panel, .equation-block {
+  background: #22262a;
+  border-radius: 18px;
+  padding: 18px;
+}
+.equation {
+  font-size: 1.3rem;
+  color: var(--primary);
+}
+.footer {
+  text-align: center;
+  margin-top: 16px;
+  color: var(--secondary);
+  font-size: 1.1rem;
+}
+::-webkit-scrollbar { width: 12px; background: #23272e; }
+::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 8px; }
